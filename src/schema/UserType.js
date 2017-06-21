@@ -9,31 +9,38 @@
 
 /* @flow */
 
-import { GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLObjectType, GraphQLList, GraphQLString } from 'graphql';
 import { globalIdField } from 'graphql-relay';
+
+import EmailType from './EmailType';
 import { nodeInterface } from './Node';
 
 export default new GraphQLObjectType({
-  name: 'Article',
-  description: 'Featured article',
+  name: 'User',
+  interfaces: [nodeInterface],
 
   fields: {
     id: globalIdField(),
 
-    title: {
+    displayName: {
       type: GraphQLString,
+      resolve(parent) {
+        return parent.display_name;
+      },
     },
 
-    author: {
+    imageUrl: {
       type: GraphQLString,
+      resolve(parent) {
+        return parent.image_url;
+      },
     },
 
-    url: {
-      type: GraphQLString,
+    emails: {
+      type: new GraphQLList(EmailType),
+      resolve(parent, args, { user }) {
+        return user && parent.id === user.id ? parent.emails : null;
+      },
     },
   },
-
-  interfaces: [
-    nodeInterface,
-  ],
 });

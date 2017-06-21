@@ -4,7 +4,7 @@
 backends with [Node.js][node], [JavaScript][js] (via [Babel][babel]) and [GraphQL][gql]. It's
 meant to be paired with a web and/or mobile application project such as [React Starter Kit][rsk].
 
-#### This project is maintained with support from <a href="https://rollbar.com/?utm_source=reactstartkit(github)&utm_medium=link&utm_campaign=reactstartkit(github)"><img src="https://koistya.github.io/files/rollbar-247x48.png" height="24" align="top" /></a> <a href="https://localizejs.com/?cid=802&utm_source=rsk"><img src="https://koistya.github.io/files/localize-221x48.png" height="24" align="top" /></a>
+#### This project is maintained with support from <a href="https://rollbar.com/?utm_source=reactstartkit(github)&utm_medium=link&utm_campaign=reactstartkit(github)"><img src="https://koistya.github.io/files/rollbar-247x48.png" height="24" align="top" /></a> <a href="https://x-team.com/hire-react-developers/?utm_source=reactstarterkit&utm_medium=github-link&utm_campaign=reactstarterkit-june"><img src="https://koistya.github.io/files/xteam-168x48.png" height="24" align="top" /></a><sup><a href="https://x-team.com/join/?utm_source=reactstarterkit&utm_medium=github-link&utm_campaign=reactstarterkit-june">Hiring</a></sup>
 
 
 ## Features
@@ -15,6 +15,9 @@ meant to be paired with a web and/or mobile application project such as [React S
 ✓ Authentication and authorization via [Passport.js][passport] (see [`src/passport.js`](./src/passport.js), [`src/routes/account.js`](./src/routes/account.js))<br>
 ✓ Session and cache management with [Redis][redis] and [DataLoader][loader] (see [stop using JWT for sessions](http://cryto.net/~joepie91/blog/2016/06/13/stop-using-jwt-for-sessions/))<br>
 ✓ **24/7** community support on [Gitter][gitter] + *premium support* on [Skype][skype] ([book a session](https://calendly.com/koistya))<br>
+
+
+<p align="center"><a href="https://graphql-demo.kriasoft.com"><img src="http://koistya.github.io/files/nodejs-api-starter-demo.png" width="600" alt="GraphQL Demo" /><br><sup>https://graphql-demo.kriasoft.com</sup></a></p>
 
 
 ## Directory Layout
@@ -28,26 +31,25 @@ meant to be paired with a web and/or mobile application project such as [React S
 ├── /seeds/                     # Scripts with reference/sample data
 ├── /src/                       # Node.js application source files
 │   ├── /emails/                # Handlebar templates for sending transactional email
-│   ├── /models/                # Data access models, e.g. User.create({ email })
 │   ├── /routes/                # Express routes, e.g. /login/facebook
-│   ├── /types/                 # GraphQL types with resolve functions
+│   ├── /schema/                # GraphQL schema, types, fields and mutations
 │   │   ├── /Node.js            # Relay's "node" definitions
-│   │   ├── /UserType.js        # User account (id, email, etc.)
-│   │   └── /...                # etc.
+│   │   ├── /User.js            # User related top-level fields and mutations
+│   │   ├── /UserType.js        # User type, representing a user account (id, emails, etc.)
+│   │   ├── /...                # etc.
+│   │   └── /index.js           # Exports GraphQL schema object
 │   ├── /app.js                 # Express.js application
-│   ├── /DataLoader.js          # Data access utility for GraphQL /w batching and caching
+│   ├── /DataLoaders.js         # Data access utility for GraphQL /w batching and caching
 │   ├── /db.js                  # Database access and connection pooling (via Knex)
 │   ├── /email.js               # Client utility for sending transactional email
 │   ├── /passport.js            # Passport.js authentication strategies
 │   ├── /redis.js               # Redis client
-│   ├── /schema.js              # GraphQL schema
 │   └── /server.js              # Node.js server (entry point)
 ├── /test/                      # Unit, integration and load tests
 ├── /tools/                     # Build automation scripts and utilities
 ├── docker-compose.yml          # Defines Docker services, networks and volumes
 ├── Dockerfile                  # Commands for building a Docker image for production
-├── package.json                # The list of project dependencies
-└── yarn.lock                   # Fixed versions of all the dependencies
+└── package.json                # The list of project dependencies
 ```
 
 
@@ -82,6 +84,12 @@ From this shell you can run automation scripts such as `yarn test`, `yarn run db
 Find the full list of scripts available inside the [`tools`](./tools) folder and
 the [`package.json`](./package.json) file.
 
+In order to open a Postgres shell, run the following:
+
+```bash
+docker-compose exec db psql <db> -U postgres
+```
+
 
 ## Testing
 
@@ -95,9 +103,10 @@ yarn run test:watch             # Run unit tests in watch mode
 
 ## Debugging
 
-In order to run the app with [V8 inspector][v8debug] enabled, simply set `NODE_DEBUG=true` flag in
-the [`docker-compose.yml`](docker-compose.yml) file, restart the app (`docker-compose up`) and
-[attach your debugger][vsdebug] to `127.0.0.1:9229` (see [`.vscode/launch.json`](https://gist.github.com/koistya/421ea3e0139225b27f909e98202a34de)
+In order to run the app with [V8 inspector][v8debug] enabled, simply replace `node tools/run.js`
+with `node --inspect tools/run.js` in either [`docker-compose.yml`](docker-compose.yml) file, or
+even better in `docker-compose.override.yml`. Then restart the app (`docker-compose up`) and
+[attach your debugger][vsdebug] to `127.0.0.1:9230` (see [`.vscode/launch.json`](https://gist.github.com/koistya/421ea3e0139225b27f909e98202a34de)
 for [VS Code][code] as an example).
 
 
@@ -174,7 +183,7 @@ Made with ♥ by Konstantin Tarkus ([@koistya](https://twitter.com/koistya), [bl
 [babel]: http://babeljs.io/
 [gql]: http://graphql.org/
 [yarn]: https://yarnpkg.com
-[demo]: https://reactstarter.com/graphql
+[demo]: https://graphql-demo.kriasoft.com/
 [pg]: https://www.postgresql.org/
 [do]: https://m.do.co/c/eef302dbae9f
 [code]: https://code.visualstudio.com/

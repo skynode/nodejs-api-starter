@@ -23,11 +23,11 @@ import i18nextBackend from 'i18next-node-fs-backend';
 import expressGraphQL from 'express-graphql';
 import PrettyError from 'pretty-error';
 import { printSchema } from 'graphql';
-import DataLoader from './DataLoader';
 import email from './email';
 import redis from './redis';
 import passport from './passport';
 import schema from './schema';
+import DataLoaders from './DataLoaders';
 import accountRoutes from './routes/account';
 
 i18next
@@ -84,10 +84,16 @@ app.use('/graphql', expressGraphQL(req => ({
   context: {
     t: req.t,
     user: req.user,
-    loader: DataLoader.create(),
+    ...DataLoaders.create(),
   },
   graphiql: process.env.NODE_ENV !== 'production',
   pretty: process.env.NODE_ENV !== 'production',
+  formatError: error => ({
+    message: error.message,
+    state: error.originalError && error.originalError.state,
+    locations: error.locations,
+    path: error.path,
+  }),
 })));
 
 // The following routes are intended to be used in development mode only
@@ -101,7 +107,7 @@ if (process.env.NODE_ENV !== 'production') {
   // A route for testing authentication/authorization
   app.get('/', (req, res) => {
     if (req.user) {
-      res.send(`<p>${req.t('Welcome, {{user}}!', { user: req.user.email })} (<a href="javascript:fetch('/login/clear', { method: 'POST', credentials: 'include' }).then(() => window.location = '/')">${req.t('log out')}</a>)</p>`);
+      res.send(`<p>${req.t('Welcome, {{user}}!', { user: req.user.displayName })} (<a href="javascript:fetch('/login/clear', { method: 'POST', credentials: 'include' }).then(() => window.location = '/')">${req.t('log out')}</a>)</p>`);
     } else {
       res.send(`<p>${req.t('Welcome, guest!')} (<a href="/login/facebook">${req.t('sign in')}</a>)</p>`);
     }

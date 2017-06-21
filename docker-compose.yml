@@ -4,7 +4,7 @@ services:
 
   # Nginx web server acting as a reverse proxy for "web" and "api" services
   nginx:
-    image: nginx:1.11.13-alpine
+    image: nginx:1.13.1-alpine
     read_only: true
     tmpfs:
       - /var/cache/nginx
@@ -21,13 +21,12 @@ services:
 
   # Data API and authentication/authorization
   api:
-    image: node:7.9.0-alpine
+    image: node:8.1.0-alpine
     hostname: api
     depends_on:
       - db
       - redis
     environment:
-      - NODE_DEBUG=false
       - CORS_ORIGIN=http://localhost:3001,http://localhost:3000
       - DATABASE_URL=postgres://postgres@db:5432/dev
       - DATABASE_DEBUG=false
@@ -52,7 +51,7 @@ services:
 
   # SQL and document data store
   db:
-    image: postgres:9.6.2-alpine
+    image: postgres:9.6.3-alpine
     read_only: true
     tmpfs:
       - /tmp
@@ -63,7 +62,7 @@ services:
 
   # Distributed in-memory cache
   redis:
-    image: redis:3.2.8-alpine
+    image: redis:3.2.9-alpine
     read_only: true
     volumes:
       - redis:/data

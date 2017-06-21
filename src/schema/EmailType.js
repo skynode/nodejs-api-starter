@@ -9,22 +9,20 @@
 
 /* @flow */
 
-import { GraphQLObjectType, GraphQLString } from 'graphql';
-import { globalIdField } from 'graphql-relay';
-import { nodeInterface } from './Node';
+import { GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLBoolean } from 'graphql';
 
 export default new GraphQLObjectType({
-  name: 'User',
-
+  name: 'Email',
   fields: {
-    id: globalIdField(),
-
     email: {
-      type: GraphQLString,
+      type: new GraphQLNonNull(GraphQLString),
+    },
+
+    verified: {
+      type: new GraphQLNonNull(GraphQLBoolean),
+      resolve(parent) {
+        return !!parent.verified;
+      },
     },
   },
-
-  interfaces: [
-    nodeInterface,
-  ],
 });

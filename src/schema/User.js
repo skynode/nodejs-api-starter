@@ -7,10 +7,14 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-const faker = require('faker');
+/* @flow */
+/* eslint-disable import/prefer-default-export */
 
-module.exports.seed = db =>
-  // Create 10 random website users (as an example)
-  Promise.all(Array.from({ length: 10 }).map(() => db.insert({
-    email: faker.internet.email(),
-  }).into('users')));
+import UserType from './UserType';
+
+export const me = {
+  type: UserType,
+  resolve(root, args, { user, users }) {
+    return user && users.load(user.id);
+  },
+};
